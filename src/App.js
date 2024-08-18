@@ -46,6 +46,7 @@ function Board({ xIsNext, currentMove, squares, onPlay }) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [isDescending, setIsDescending] = useState(false); // New state for toggling order
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
@@ -59,6 +60,10 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
+  function toggleOrder() {
+    setIsDescending(!isDescending);
+  }
+
   const moves = history.map((_, move) => {
     const description = move > 0 ? `Go to move #${move}` : 'Go to game start';
 
@@ -68,7 +73,10 @@ export default function Game() {
       </li>
     );
   });
-  
+
+  if (isDescending) {
+    moves.reverse();
+  }
 
   return (
     <div className="game">
@@ -76,6 +84,9 @@ export default function Game() {
         <Board xIsNext={xIsNext} currentMove={currentMove} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
+        <button onClick={toggleOrder}>
+          {isDescending ? 'Show Ascending' : 'Show Descending'}
+        </button>
         <ol>{moves}</ol>
       </div>
     </div>
